@@ -1,1 +1,72 @@
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rowida Handmade | رويدا هاند ميد</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:#fff0f3;color:#4a1a2a}
+header{background:linear-gradient(135deg,#ffb7c5,#ff8fa3);padding:35px 15px;text-align:center}
+header h1{font-size:34px}
+header p{margin-top:8px}
+.top{background:#fff;padding:14px;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.1);display:flex;justify-content:space-between;align-items:center}
+.cart-btn{background:#4a1a2a;color:#fff;border:none;padding:10px 18px;border-radius:25px;font-size:16px;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
+.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,.08)}
+.card img{width:100%;height:220px;object-fit:cover;background:#ffeef1}
+.card-body{padding:12px;text-align:center}
+.card-body h3{font-size:16px;min-height:42px}
+.price{color:#e11d48;font-weight:bold;font-size:18px;margin:6px 0}
+.add-btn{background:#ff5c7a;color:#fff;border:none;width:100%;padding:11px;border-radius:12px;font-size:15px;cursor:pointer;font-weight:bold}
+footer{background:#4a1a2a;color:#fff;text-align:center;padding:25px 15px;margin-top:20px}
+#cartBox{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;padding:18px;border-radius:25px 25px 0 0;box-shadow:0 -5px 30px rgba(0,0,0,.2);z-index:20;max-height:75vh;overflow:auto}
+.cart-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}
+.whats-btn{display:block;background:#25D366;color:#fff;text-align:center;padding:15px;border-radius:15px;text-decoration:none;font-weight:bold;font-size:18px;margin-top:12px}
+.close-btn{background:#eee;border:none;padding:8px 15px;border-radius:10px;margin-bottom:10px}
+.badge{background:#ff5c7a;color:#fff;font-size:11px;padding:3px 8px;border-radius:20px}
+.cat{grid-column:1/-1;background:#fff;padding:12px;border-radius:15px;font-weight:bold;font-size:19px;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+<h1>🌸 Rowida Handmade 🌸</h1>
+<p>هدايا معمولة بحب - بوكسات، ساعات، طقم فرح، توزيعات سبوع وبوكيهات</p>
+<p>اطلب من واتساب 01121895963 | شحن لكل المحافظات</p>
+</header>
+<div class="top"><span>🛒 سلتك: <b id="count">0</b></span><button class="cart-btn" onclick="openCart()">عرض السلة و الطلب</button></div>
+<div class="grid" id="grid"></div>
+<div id="cartBox">
+<button class="close-btn" onclick="closeCart()">✕ اقفل</button>
+<h3>طلبك:</h3><div id="cartItems"></div>
+<p style="margin-top:10px;font-weight:bold">الاجمالي: <span id="total">0</span> ج</p>
+<a class="whats-btn" id="waLink" target="_blank" href="#">اطلب دلوقتي على واتساب 📲</a>
+</div>
+<footer><h3>Rowida Handmade</h3><p>لو عايز حاجة مخصوص بالاسم، ابعتلنا وهنعملها لك ❤️</p></footer>
+<script>
+const WHATSAPP="201121895963";
+const products=[
+{cat:"🎁 هدايا جاهزة"},
+{name:"بوكس هدايا رجالي بالاسم",price:350,img:"1.jpg",tag:"الأكثر طلبا"},
+{name:"حصالة تحدي 10000",price:120,img:"2.jpg",tag:"تحدي التوفير"},
+{name:"محفظة جلد بالاسم",price:180,img:"3.jpg",tag:"بالاسم"},
+{name:"شرابات - 3 قطع",price:25,img:"4.jpg",tag:"عرض"},
+{name:"خواتم استلس",price:10,img:"5.jpg",tag:"الكل بيحبه"},
+{name:"ساعة حريمي + انسيال",price:110,img:"6.jpg",tag:"شيك"},
+{name:"ساعة رجالي",price:85,img:"7.jpg",tag:"فوري"},
+{cat:"💐 شغل هاند ميد مخصوص"},
+{name:"بوكيه وردة واحدة",price:0,img:"8.jpg",tag:"جديد - اسأل على السعر"},
+{name:"طقم فرح كامل - منديل + مراية",price:0,img:"9.jpg",tag:"بالاسم والتاريخ"},
+{name:"توزيعات سبوع - سبحة + كارت",price:15,img:"10.jpg",tag:"15ج - اقل عدد 50 قطعة"},
+{name:"مج حراري / ترمس بالاسم",price:0,img:"11.jpg",tag:"بالاسم"},
+{name:"مرايات فرح بالاسم",price:0,img:"12.jpg",tag:"بالاسم والتاريخ"},
+{name:"طقم فرح Aya & Kariem",price:0,img:"13.jpg",tag:"منديل + مراية + تعليقة"},
+];
+let cart=[];const grid=document.getElementById('grid');
+products.forEach((p,i)=>{if(p.cat){grid.innerHTML+=`<div class="cat">${p.cat}</div>`;return;}grid.innerHTML+=`<div class="card"><img src="${p.img}"><div class="card-body"><span class="badge">${p.tag}</span><h3>${p.name}</h3><div class="price">${p.price==0?'اسأل على السعر':p.price+' ج'}</div><button class="add-btn" onclick="addToCart(${i})">+ اطلب دلوقتي</button></div></div>`;});
+function addToCart(i){cart.push(products[i]);document.getElementById('count').innerText=cart.length;alert(products[i].name+" اتضاف للسلة ✅");}
+function openCart(){if(cart.length===0){alert("السلة فاضية، اختار حاجة الاول");return;}document.getElementById('cartBox').style.display='block';let html="";let total=0;let msg="اهلا رويدا ❤️ عايز اطلب من Rowida Handmade:%0A%0A";cart.forEach((p,idx)=>{total+=p.price;html+=`<div class="cart-item"><span>${p.name}</span><b>${p.price==0?'سعر حسب الطلب':p.price+' ج'}</b></div>`;msg+=`${idx+1}- ${p.name} - ${p.price==0?'سعر حسب الطلب':p.price+' ج'}%0A`;});msg+=`%0Aالاجمالي: ${total} ج`;document.getElementById('cartItems').innerHTML=html;document.getElementById('total').innerText=total;document.getElementById('waLink').href=`https://wa.me/${WHATSAPP}?text=${msg}`;}
+function closeCart(){document.getElementById('cartBox').style.display='none';}
+</script>
+</body>
+</html>
